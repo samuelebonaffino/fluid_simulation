@@ -32,7 +32,7 @@ class Fluid
         vx[IX(x,y)] += amountX;
         vy[IX(x,y)] += amountY;
     }
-
+    
     void step()
     {
         diffuse(1, vx0, vx, visc, dt);
@@ -48,6 +48,21 @@ class Fluid
         diffuse(0, s, density, diff, dt);
         advect(0, density, s, vx, vy, dt);
     }
+    void step(Audio audio)
+    {
+        diffuse(1, vx0, vx, visc, dt);
+        diffuse(2, vy0, vy, visc, dt);
+
+        project(audio, vx0, vy0, vx, vy);
+
+        advect(1, vx, vx0, vx0, vy0, dt);
+        advect(2, vy, vy0, vx0, vy0, dt);
+        
+        project(audio, vx, vy, vx0, vy0);
+
+        diffuse(0, s, density, diff, dt);
+        advect(0, density, s, vx, vy, dt);
+    }
 
     void renderD()
     {
@@ -59,6 +74,7 @@ class Fluid
                 float x = i * SCALE;
                 float y = j * SCALE;
                 float d = this.density[IX(i,j)];
+
                 fill((d+50)%255, 200, d);
                 noStroke();
                 rect(x, y, SCALE, SCALE);

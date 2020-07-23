@@ -27,6 +27,24 @@ void lin_solve(int b, float[] x, float[] x0, float a, float c)
             }
     set_bnd(b, x);
 }
+void lin_solve(int b, float[] x, float[] x0, float a, float c, Audio audio)
+{
+    float cRecip = 1.0/c;
+    for(int k = 0; k < I; k++)
+        for(int j = 1; j < N-1; j++)
+            for(int i = 1; i < N-1; i++)
+            {
+                int id = audio.getSpectrumID(IX(i,j));
+                float f = audio.getFrequency(id);
+                x[IX(i,j)] = (x0[IX(i,j)]
+                              + a*(x[IX(i+1,j)]
+                              + x[IX(i-1,j)]
+                              + x[IX(i,j+1)]
+                              + x[IX(i,j-1)]
+                              )) * cRecip * f;
+            }
+    set_bnd(b, x);
+}
 
 void project(float[] velocX, float[] velocY, float[] p, float[] div)
 {
@@ -51,6 +69,37 @@ void project(float[] velocX, float[] velocY, float[] p, float[] div)
         {
             velocX[IX(i,j)] -= 0.5f*(p[IX(i+1,j)]-p[IX(i-1,j)])*N;
             velocY[IX(i,j)] -= 0.5f*(p[IX(i,j+1)]-p[IX(i,j-1)])*N;
+        }
+    
+    set_bnd(1, velocX);
+    set_bnd(2, velocY);
+}
+void project(Audio audio, float[] velocX, float[] velocY, float[] p, float[] div)
+{
+    for(int j = 1; j < N-1; j++)
+        for(int i = 1; i < N-1; i++)
+        {
+            div[IX(i,j)] = -0.5f*(
+                  velocX[IX(i+1,j)]
+                - velocX[IX(i-1,j)]
+                + velocY[IX(i,j+1)]
+                - velocY[IX(i,j-1)]
+                )/N;
+                p[IX(i,j)] = 0;
+        }
+    
+    set_bnd(0, div);
+    set_bnd(0, p);
+    lin_solve(0, p, div, 1, 4);
+
+    for(int j = 1; j < N-1; j++)
+        for(int i = 1; i < N-1; i++)
+        {
+            int id = audio.getSpectrumID(IX(i,j));
+            float f = audio.getFrequency(id);
+            f = map(f, 0, 1, 0.1, 1);
+            velocX[IX(i,j)] -= f*(p[IX(i+1,j)]-p[IX(i-1,j)])*N;
+            velocY[IX(i,j)] -= f*(p[IX(i,j+1)]-p[IX(i,j-1)])*N;
         }
     
     set_bnd(1, velocX);
