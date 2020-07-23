@@ -85,9 +85,9 @@ class Fluid
     {
         for(int i = 0; i < this.density.length; i++)
         {
-            // float d = this.density[i];
-            // this.density[i] = constrain(d - 0.02, 0, 255);
-            this.density[i] *= 0.99;
+            float d = this.density[i];
+            this.density[i] = constrain(d - 0.02, 0, 255);
+            // this.density[i] *= 0.99;
         }
     }
 }
