@@ -3,7 +3,7 @@ Inspired by Daniel Shiffman's work about Fluid Simulation, coding challenge #132
 
 # INTRO
 I've always been amazed by fluids' behaviour, and it's been a while since I thought to try to write some code about it.
-My goal is to learn shading languages and implement the algorithm on GPU in order to unleash the full potential of this kind of simulation, but it's not my cup of tea at the moment so CPU is the way to go currently. I even bought GPU Gems (https://www.nvidia.com/en-us/drivers/gpu-gems-home/) in order to understand something more and have a good guide to follow, I just need to put it in works really.
+My goal is to learn shading languages and implement the algorithm on GPU in order to unleash the full potential of this kind of simulation, but it's not my cup of tea at the moment so CPU is the way to go. I even bought GPU Gems (https://www.nvidia.com/en-us/drivers/gpu-gems-home/) in order to understand something more and have a good guide to follow, I just need to put it in works really.
 
 # DEPENDECIES
 In order to run the simulation you must install Processing (last version is 3.5.4, currently). Then, inside Processing, you have to install two libraries through Sketch->Import Library->Add Library:
